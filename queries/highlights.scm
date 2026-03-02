@@ -72,7 +72,7 @@
   "def"
   name: (_)
   (parameters)?
-  body: (block (expression_statement (string) @string.doc)))
+  body: (block . (string) @string.doc))
 
 [
   "-"
