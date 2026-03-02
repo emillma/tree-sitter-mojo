@@ -4019,3 +4019,90 @@ fn check[T: CollectionElement]():
           (string_start)
           (string_content)
           (string_end))))))
+
+================================================================================
+Align decorator - basic struct
+================================================================================
+
+@align(64)
+struct CacheAligned:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (integer))))
+    definition: (class_definition
+      name: (identifier)
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
+
+================================================================================
+Align decorator - struct parameter
+================================================================================
+
+@align(Self.alignment)
+struct AlignedBuffer[alignment: Int]:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (attribute
+            object: (identifier)
+            attribute: (identifier)))))
+    definition: (class_definition
+      name: (identifier)
+      type_parameters: (type_parameter
+        (type
+          (constrained_type
+            (type
+              (identifier))
+            (type
+              (identifier)))))
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
+
+================================================================================
+Align decorator - combined with other decorators
+================================================================================
+
+@always_inline
+@align(16)
+struct SimdAligned:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (identifier))
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (integer))))
+    definition: (class_definition
+      name: (identifier)
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
