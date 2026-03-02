@@ -216,7 +216,7 @@ module.exports = grammar({
 
     chevron: ($) => seq(">>", $.expression),
 
-    assert_statement: ($) => seq("assert", commaSep1($.expression)),
+    assert_statement: ($) => seq(optional("comptime"), "assert", commaSep1($.expression)),
 
     comptime_assert_statement: ($) => seq("__comptime_assert", $.expression),
 
@@ -274,6 +274,7 @@ module.exports = grammar({
     ),
 
     if_statement: ($) => seq(
+      optional('comptime'),
       'if',
       field('condition', $.expression),
       ':',
@@ -322,7 +323,7 @@ module.exports = grammar({
     ),
 
     for_statement: ($) => seq(
-      optional('async'),
+      optional(choice('async', 'comptime')),
       'for',
       field('left', $._left_hand_side),
       'in',
@@ -551,6 +552,7 @@ module.exports = grammar({
 
     if_statement: ($) =>
       seq(
+        optional("comptime"),
         "if",
         field("condition", $.expression),
         ":",
@@ -596,7 +598,7 @@ module.exports = grammar({
 
     for_statement: ($) =>
       seq(
-        optional("async"),
+        optional(choice("async", "comptime")),
         "for",
         field("left", $._left_hand_side),
         "in",
