@@ -2,59 +2,81 @@ name: CI
 
 on:
   push:
-    branches: [master]
-    paths:
-      - grammar.js
-      - src/**
-      - test/**
-      - bindings/**
-      - binding.gyp
+    branches: [main]
   pull_request:
-    paths:
-      - grammar.js
-      - src/**
-      - test/**
-      - bindings/**
-      - binding.gyp
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ${{github.workflow}}-${{github.ref}}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test parser
-    runs-on: ${{matrix.os}}
+  parser:
+    name: Parser (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Set up tree-sitter
-        uses: tree-sitter/setup-action/cli@v2
-      - name: Run tests
-        uses: tree-sitter/parser-test-action@v2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          test-rust: true
-          test-node: true
-          test-python: true
-          test-go: true
-          test-swift: true
-      - name: Set up examples
-        run: |-
-          git clone https://github.com/numpy/numpy examples/numpy --single-branch --depth=1 --filter=blob:none
-          git clone https://github.com/django/django examples/django --single-branch --depth=1 --filter=blob:none
-          git clone https://github.com/pallets/flask examples/flask --single-branch --depth=1 --filter=blob:none
-          git clone https://github.com/python/cpython examples/cpython --single-branch --depth=1 --filter=blob:none
-      - name: Parse examples
-        uses: tree-sitter/parse-action@v4
-        with:
-          files: |
-            examples/**/*.py
-            !examples/cpython/Lib/test/test_annotationlib.py
-            !examples/cpython/Lib/test/test_compile.py
-            !examples/cpython/Lib/test/test_type_params.py
-          invalid-files: |
-            examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
+          cache: npm
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci
+      - name: Check generated parser
+        shell: bash
+        run: |
+          npx tree-sitter generate
+          git diff --exit-code -- src
+      - name: Test parser and queries
+        shell: bash
+        run: |
+          npx tree-sitter test
+          TREE_SITTER="$PWD/node_modules/.bin/tree-sitter" script/check-errors.sh
+      - name: Test Node binding
+        run: npm test
+      - name: Lint grammar
+        run: npm run lint
+
+  bindings:
+    name: Native bindings
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Test Rust binding
+        run: |
+          cargo fmt --all -- --check
+          cargo test --locked
+      - name: Test Go binding
+        run: go test ./bindings/go
+      - name: Test Python binding
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mojo-python"
+          "$RUNNER_TEMP/mojo-python/bin/pip" install build==1.5.0
+          "$RUNNER_TEMP/mojo-python/bin/python" -m build --sdist --outdir "$RUNNER_TEMP/mojo-dist"
+          artifact=$(find "$RUNNER_TEMP/mojo-dist" -name '*.tar.gz' -type f -print -quit)
+          "$RUNNER_TEMP/mojo-python/bin/pip" install "${artifact}[core]"
+          "$RUNNER_TEMP/mojo-python/bin/python" -m unittest discover -v -s bindings/python/tests
+      - name: Test CMake binding
+        run: |
+          cmake -S . -B "$RUNNER_TEMP/mojo-cmake"
+          cmake --build "$RUNNER_TEMP/mojo-cmake"
+      - name: Test Makefile binding
+        run: make
+
+  swift:
+    name: Swift binding
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Test Swift binding
+        run: swift test
