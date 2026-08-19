@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=62.4.0", "wheel"]
+requires = ["setuptools==84.0.0", "wheel==0.48.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,16 +16,17 @@ classifiers = [
 authors = [
   { name = "Max Brunsfeld", email = "maxbrunsfeld@gmail.com" },
   { name = "Amaan Qureshi", email = "amaanq12@gmail.com" },
+  { name = "Ayush Shukla", email = "ayush@shuklaayu.sh" },
 ]
 requires-python = ">=3.10"
-license.text = "MIT"
+license = "MIT"
 readme = "README.md"
 
 [project.urls]
-Homepage = "https://github.com/lsh/tree-sitter-mojo"
+Homepage = "https://github.com/shuklaayush/tree-sitter-mojo"
 
 [project.optional-dependencies]
-core = ["tree-sitter~=0.24"]
+core = ["tree-sitter~=0.26.0"]
 
 [tool.cibuildwheel]
 build = "cp310-*"

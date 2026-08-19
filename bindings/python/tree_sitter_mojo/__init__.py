@@ -1,12 +1,17 @@
-"""Python grammar for tree-sitter"""
+"""Mojo grammar for tree-sitter."""
 
 from importlib.resources import files as _files
+from pathlib import Path as _Path
 
 from ._binding import language
 
 
 def _get_query(name, file):
-    query = _files(f"{__package__}.queries") / file
+    try:
+        query = _files(f"{__package__}.queries") / file
+    except ModuleNotFoundError:
+        # Editable installs use the source tree before Build copies queries.
+        query = _Path(__file__).resolve().parents[3] / "queries" / file
     globals()[name] = query.read_text()
     return globals()[name]
 

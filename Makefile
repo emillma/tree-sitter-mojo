@@ -3,7 +3,7 @@ $(error Windows is not supported)
 endif
 
 LANGUAGE_NAME := tree-sitter-mojo
-HOMEPAGE_URL := https://github.com/tree-sitter/tree-sitter-mojo
+HOMEPAGE_URL := https://github.com/shuklaayush/tree-sitter-mojo
 VERSION := 0.25.0
 
 # repository
@@ -58,21 +58,22 @@ ifneq ($(STRIP),)
 	$(STRIP) $@
 endif
 
-$(LANGUAGE_NAME).pc: tree-sitter.pc.in
-	sed -e 's|@HOMEPAGE_URL@|$(HOMEPAGE_URL)|' \
-		-e 's|@DATADIR@|$(DATADIR)|' \
-		-e 's|@INCLUDEDIR@|$(INCLUDEDIR)|' \
-		-e 's|@LIBDIR@|$(LIBDIR)|' \
-		-e 's|@LANGUAGE_NAME@|$(LANGUAGE_NAME)|' \
-		-e 's|@VERSION@|$(VERSION)|' \
+$(LANGUAGE_NAME).pc: bindings/c/$(LANGUAGE_NAME).pc.in
+	sed -e 's|@CMAKE_INSTALL_PREFIX@|$(PREFIX)|' \
+		-e 's|@CMAKE_INSTALL_LIBDIR@|$(patsubst $(PREFIX)/%,%,$(LIBDIR))|' \
+		-e 's|@CMAKE_INSTALL_INCLUDEDIR@|$(patsubst $(PREFIX)/%,%,$(INCLUDEDIR))|' \
+		-e 's|@PROJECT_DESCRIPTION@|Mojo grammar for tree-sitter|' \
+		-e 's|@PROJECT_HOMEPAGE_URL@|$(HOMEPAGE_URL)|' \
+		-e 's|@PROJECT_VERSION@|$(VERSION)|' \
 		$< > $@
 
 $(PARSER): $(SRC_DIR)/grammar.json
-	$(TS) generate --no-bindings $^
+	$(TS) generate $^
 
 install: all
 	install -d '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter '$(DESTDIR)$(PCLIBDIR)' '$(DESTDIR)$(LIBDIR)'
-	install -m644 tree-sitter.h '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/$(LANGUAGE_NAME).h
+	install -m644 bindings/c/tree_sitter/tree-sitter-mojo.h \
+		'$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/tree-sitter-mojo.h
 	install -m644 $(LANGUAGE_NAME).pc '$(DESTDIR)$(PCLIBDIR)'/
 	install -m644 lib$(LANGUAGE_NAME).a '$(DESTDIR)$(LIBDIR)'/
 	install -m755 lib$(LANGUAGE_NAME).$(SOEXT) '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXTVER)
