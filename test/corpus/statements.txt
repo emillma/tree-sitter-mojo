@@ -926,7 +926,7 @@ fn e(**list: String):
 Empty blocks
 ================================================================================
 
-# These are not actually valid python; blocks
+# These are not actually valid syntax; blocks
 # must contain at least one statement. But we
 # allow them because error recovery for empty
 # blocks doesn't work very well otherwise.
@@ -1811,16 +1811,16 @@ var z = [1, 2, 3]
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (variable_declaration
     (identifier)
     (integer))
-  (assignment
+  (variable_declaration
     (identifier)
     (string
       (string_start)
       (string_content)
       (string_end)))
-  (assignment
+  (variable_declaration
     (identifier)
     (list
       (integer)
@@ -1838,16 +1838,16 @@ comptime z = True
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (comptime_declaration
     (identifier)
     (integer))
-  (assignment
+  (comptime_declaration
     (identifier)
     (string
       (string_start)
       (string_content)
       (string_end)))
-  (assignment
+  (comptime_declaration
     (identifier)
     (true)))
 
@@ -1863,15 +1863,21 @@ ref item = list[0]
 
 (module
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (identifier))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (attribute
       (identifier)
       (identifier)))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (subscript
       (identifier)
       (integer))))
@@ -1887,15 +1893,15 @@ var z: List[Int]
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (identifier)))
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (identifier)))
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (generic_type
@@ -1915,15 +1921,15 @@ comptime z: Bool
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier)))
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier)))
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier))))
@@ -1940,15 +1946,21 @@ ref z: MyType
 
 (module
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier)))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier)))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier))))
 
@@ -1963,12 +1975,12 @@ var z: Float = 3.14
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (identifier))
     (integer))
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (identifier))
@@ -1976,7 +1988,7 @@ var z: Float = 3.14
       (string_start)
       (string_content)
       (string_end)))
-  (assignment
+  (variable_declaration
     (identifier)
     (type
       (identifier))
@@ -1993,12 +2005,12 @@ comptime z: Bool = False
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier))
     (integer))
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier))
@@ -2006,7 +2018,7 @@ comptime z: Bool = False
       (string_start)
       (string_content)
       (string_end)))
-  (assignment
+  (comptime_declaration
     (identifier)
     (type
       (identifier))
@@ -2024,19 +2036,25 @@ ref z: MyType = container[key]
 
 (module
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier))
     (identifier))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier))
     (attribute
       (identifier)
       (identifier)))
   (assignment
-    (identifier)
+    (convention_pattern
+      (argument_convention)
+      (identifier))
     (type
       (identifier))
     (subscript

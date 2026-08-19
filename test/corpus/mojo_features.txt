@@ -221,9 +221,9 @@ def make() -> Buffer[]:
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
-    left: (identifier)
-    right: (subscript
+  (comptime_declaration
+    name: (identifier)
+    value: (subscript
       value: (identifier)))
   (function_definition
     name: (identifier)
@@ -247,9 +247,9 @@ def cast(self):
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
-    left: (identifier)
-    right: (subscript
+  (comptime_declaration
+    name: (identifier)
+    value: (subscript
       value: (identifier)
       subscript: (identifier)
       subscript: (keyword_argument
@@ -284,7 +284,7 @@ comptime Ptr[
 --------------------------------------------------------------------------------
 
 (module
-  (parameterized_alias_statement
+  (comptime_declaration
     name: (identifier)
     type_parameters: (type_parameter
       (identifier)
@@ -349,9 +349,9 @@ comptime Cb = def(Self) raises capturing[_] -> None
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
-    left: (identifier)
-    right: (subscript
+  (comptime_declaration
+    name: (identifier)
+    value: (subscript
       value: (identifier)
       subscript: (identifier)
       subscript: (function_type
@@ -370,9 +370,9 @@ comptime Cb = def(Self) raises capturing[_] -> None
               (identifier))))))
     body: (block
       (pass_statement)))
-  (assignment
-    left: (identifier)
-    right: (function_type
+  (comptime_declaration
+    name: (identifier)
+    value: (function_type
       parameter: (type
         (identifier))
       (capture_list
@@ -542,7 +542,7 @@ struct S:
   (class_definition
     (identifier)
     (block
-      (assignment
+      (comptime_declaration
         (identifier)
         (mlir_type
           (string
@@ -630,7 +630,7 @@ comptime G = def[dtype: DType, width: SIMDSize, //](Int) capturing[_] -> None
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (comptime_declaration
     (identifier)
     (function_type
       (type_parameter
@@ -651,7 +651,7 @@ comptime G = def[dtype: DType, width: SIMDSize, //](Int) capturing[_] -> None
         (identifier))
       (type
         (none))))
-  (assignment
+  (comptime_declaration
     (identifier)
     (function_type
       (type_parameter
@@ -688,7 +688,7 @@ struct S:
   (class_definition
     (identifier)
     (block
-      (parameterized_alias_statement
+      (comptime_declaration
         (identifier)
         (type_parameter
           (type
@@ -1022,7 +1022,7 @@ fn f():
     (identifier)
     (parameters)
     (block
-      (assignment
+      (variable_declaration
         (string
           (string_start)
           (string_content)
@@ -1122,7 +1122,7 @@ comptime F = def(mut Bencher, T) raises capturing[_] -> None
 --------------------------------------------------------------------------------
 
 (module
-  (assignment
+  (comptime_declaration
     (identifier)
     (function_type
       (argument_convention)
@@ -1175,14 +1175,16 @@ fn f():
     (parameters)
     (block
       (for_statement
-        (argument_convention)
-        (identifier)
+        (convention_pattern
+          (argument_convention)
+          (identifier))
         (identifier)
         (block
           (pass_statement)))
       (for_statement
-        (argument_convention)
-        (identifier)
+        (convention_pattern
+          (argument_convention)
+          (identifier))
         (attribute
           (identifier)
           (identifier))
@@ -1211,7 +1213,7 @@ comptime Cb = def(PyObjectPtr) thin abi("C") -> PyObjectPtr
         (string_end)))
     (block
       (pass_statement)))
-  (assignment
+  (comptime_declaration
     (identifier)
     (function_type
       (type
@@ -1315,7 +1317,7 @@ comptime ImplicitlyDestructible = ImplicitlyDeletable
           (keyword_argument
             (identifier)
             (identifier)))))
-    (assignment
+    (comptime_declaration
       (identifier)
       (identifier))))
 

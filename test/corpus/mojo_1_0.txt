@@ -1,0 +1,233 @@
+==================
+Current Mojo 1.0 declarations and effects
+==================
+
+comptime Example[
+    mut: Bool,
+    origin: Origin[mut=mut],
+    forward: Bool = True,
+]: Bool = True
+
+trait Producer[Output: AnyType]:
+    def produce(self) raises Error -> Output:
+        ...
+
+@fieldwise_init
+struct Counter(Copyable):
+    var value: Int
+
+    def __init__(out self, *, deinit move: Self):
+        self.value = move.value^
+
+    def update(mut self, imm amount: Int) where amount >= 0:
+        self.value += amount
+
+__extension Counter:
+    def doubled(self) -> Int:
+        return self.value * 2
+
+def captures[T: AnyType](value: T) {imm value, var owned^} -> T:
+    var closure = lambda (imm item: T) {imm value} -> T: item
+    return closure(value)
+
+---
+
+(module
+  (comptime_declaration
+    (identifier)
+    (type_parameter
+      (identifier)
+      (type
+        (identifier))
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (generic_type
+              (identifier)
+              (type_parameter
+                (identifier)
+                (identifier))))))
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (true))
+    (type
+      (identifier))
+    (true))
+  (trait_definition
+    (identifier)
+    (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier)))))
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (type
+          (identifier))
+        (type
+          (identifier))
+        (block
+          (ellipsis)))))
+  (decorated_definition
+    (decorator
+      (identifier))
+    (class_definition
+      (identifier)
+      (argument_list
+        (identifier))
+      (block
+        (variable_declaration
+          (identifier)
+          (type
+            (identifier)))
+        (function_definition
+          (identifier)
+          (parameters
+            (self_parameter
+              (argument_convention))
+            (keyword_separator)
+            (typed_parameter
+              (argument_convention)
+              (identifier)
+              (type
+                (identifier))))
+          (block
+            (assignment
+              (attribute
+                (identifier)
+                (identifier))
+              (transfer_expression
+                (attribute
+                  (identifier)
+                  (identifier))))))
+        (function_definition
+          (identifier)
+          (parameters
+            (self_parameter
+              (argument_convention))
+            (typed_parameter
+              (argument_convention)
+              (identifier)
+              (type
+                (identifier))))
+          (where_clause
+            (comparison_operator
+              (identifier)
+              (integer)))
+          (block
+            (augmented_assignment
+              (attribute
+                (identifier)
+                (identifier))
+              (identifier)))))))
+  (extension_definition
+    (identifier)
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (type
+          (identifier))
+        (block
+          (return_statement
+            (binary_operator
+              (attribute
+                (identifier)
+                (identifier))
+              (integer)))))))
+  (function_definition
+    (identifier)
+    (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier)))))
+    (parameters
+      (typed_parameter
+        (identifier)
+        (type
+          (identifier))))
+    (result_convention
+      (argument_convention)
+      (identifier)
+      (argument_convention)
+      (identifier))
+    (type
+      (identifier))
+    (block
+      (variable_declaration
+        (identifier)
+        (lambda
+          (parameters
+            (typed_parameter
+              (argument_convention)
+              (identifier)
+              (type
+                (identifier))))
+          (result_convention
+            (argument_convention)
+            (identifier))
+          (type
+            (identifier))
+          (identifier)))
+      (return_statement
+        (call
+          (identifier)
+          (argument_list
+            (identifier)))))))
+
+==================
+Generator types and MLIR regions
+==================
+
+comptime Generator[ToWrap: __generator_type[Idx: Int] AnyType] = ToWrap
+
+__mlir_region body(index: Int):
+    return index
+
+---
+
+(module
+  (comptime_declaration
+    (identifier)
+    (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (generator_type
+              (type_parameter
+                (type
+                  (constrained_type
+                    (type
+                      (identifier))
+                    (type
+                      (identifier)))))
+              (type
+                (identifier)))))))
+    (identifier))
+  (mlir_region
+    (identifier)
+    (parameters
+      (typed_parameter
+        (identifier)
+        (type
+          (identifier))))
+    (block
+      (return_statement
+        (identifier)))))

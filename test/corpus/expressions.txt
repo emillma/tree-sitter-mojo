@@ -883,10 +883,9 @@ lambda (a, b): (a, b)
         (identifier)))
     (identifier))
   (lambda
-    (lambda_parameters
-      (tuple_pattern
-        (identifier)
-        (identifier)))
+    (parameters
+      (identifier)
+      (identifier))
     (tuple
       (identifier)
       (identifier))))
