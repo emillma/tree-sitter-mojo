@@ -1,19 +1,15 @@
-class MyClass:
+struct MyClass:
   #    ^ definition.class
   def hello():
     #  ^ definition.function
-    print "hello from MyClass"
+    print("hello from MyClass")
 
 MyClass.hello()
 #        ^ reference.call
 
 def main():
   #  ^ definition.function
-  print "Hello, world!"
-
-fn main():
-  #  ^ definition.function
-  print "Hello, world!"
+  print("Hello, world!")
 
 main()
 # <- reference.call
