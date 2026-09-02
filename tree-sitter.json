@@ -26,14 +26,10 @@
       {
         "name": "Amaan Qureshi",
         "email": "amaanq12@gmail.com"
-      },
-      {
-        "name": "Ayush Shukla",
-        "email": "ayush@shuklaayu.sh"
       }
     ],
     "links": {
-      "repository": "https://github.com/shuklaayush/tree-sitter-mojo"
+      "repository": "https://github.com/emillma/tree-sitter-mojo"
     }
   },
   "bindings": {

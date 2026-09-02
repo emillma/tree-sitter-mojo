@@ -2479,7 +2479,7 @@ Method with self and argument conventions
 struct MyStruct:
     fn method(read self, mut x: Int):
         x = x + 1
-    
+
     fn update(mut self):
         pass
 
@@ -3868,3 +3868,259 @@ __comptime_assert (x > 0)
       (comparison_operator
         (identifier)
         (integer)))))
+
+================================================================================
+Comptime if - simple
+================================================================================
+
+comptime if condition:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (pass_statement))))
+
+================================================================================
+Comptime if - with else
+================================================================================
+
+comptime if x > 0:
+    pass
+else:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (comparison_operator
+      (identifier)
+      (integer))
+    consequence: (block
+      (pass_statement))
+    alternative: (else_clause
+      body: (block
+        (pass_statement)))))
+
+================================================================================
+Comptime if - with elif
+================================================================================
+
+comptime if x == 1:
+    pass
+elif x == 2:
+    pass
+else:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (comparison_operator
+      (identifier)
+      (integer))
+    consequence: (block
+      (pass_statement))
+    alternative: (elif_clause
+      condition: (comparison_operator
+        (identifier)
+        (integer))
+      consequence: (block
+        (pass_statement)))
+    alternative: (else_clause
+      body: (block
+        (pass_statement)))))
+
+================================================================================
+Comptime for - simple
+================================================================================
+
+comptime for i in range(10):
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (for_statement
+    left: (identifier)
+    right: (call
+      function: (identifier)
+      arguments: (argument_list
+        (integer)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Comptime for - with else
+================================================================================
+
+comptime for x in items:
+    pass
+else:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (for_statement
+    left: (identifier)
+    right: (identifier)
+    body: (block
+      (pass_statement))
+    alternative: (else_clause
+      body: (block
+        (pass_statement)))))
+
+================================================================================
+Comptime assert - keyword form
+================================================================================
+
+comptime assert x > 0
+
+--------------------------------------------------------------------------------
+
+(module
+  (assert_statement
+    (comparison_operator
+      (identifier)
+      (integer))))
+
+================================================================================
+Comptime assert - keyword form with message
+================================================================================
+
+comptime assert x > 0, "x must be positive"
+
+--------------------------------------------------------------------------------
+
+(module
+  (assert_statement
+    (comparison_operator
+      (identifier)
+      (integer))
+    (string
+      (string_start)
+      (string_content)
+      (string_end))))
+
+================================================================================
+Comptime assert - keyword form in function
+================================================================================
+
+fn check[T: CollectionElement]():
+    comptime assert T.__is_pod__, "T must be POD"
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier)))))
+    parameters: (parameters)
+    body: (block
+      (assert_statement
+        (attribute
+          object: (identifier)
+          attribute: (identifier))
+        (string
+          (string_start)
+          (string_content)
+          (string_end))))))
+
+================================================================================
+Align decorator - basic struct
+================================================================================
+
+@align(64)
+struct CacheAligned:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (integer))))
+    definition: (class_definition
+      name: (identifier)
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
+
+================================================================================
+Align decorator - struct parameter
+================================================================================
+
+@align(Self.alignment)
+struct AlignedBuffer[alignment: Int]:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (attribute
+            object: (identifier)
+            attribute: (identifier)))))
+    definition: (class_definition
+      name: (identifier)
+      type_parameters: (type_parameter
+        (type
+          (constrained_type
+            (type
+              (identifier))
+            (type
+              (identifier)))))
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
+
+================================================================================
+Align decorator - combined with other decorators
+================================================================================
+
+@always_inline
+@align(16)
+struct SimdAligned:
+    var data: Int
+
+--------------------------------------------------------------------------------
+
+(module
+  (decorated_definition
+    (decorator
+      (identifier))
+    (decorator
+      (call
+        function: (identifier)
+        arguments: (argument_list
+          (integer))))
+    definition: (class_definition
+      name: (identifier)
+      body: (block
+        (assignment
+          left: (identifier)
+          type: (type
+            (identifier)))))))
