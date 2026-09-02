@@ -3879,10 +3879,11 @@ comptime if condition:
 --------------------------------------------------------------------------------
 
 (module
-  (if_statement
-    condition: (identifier)
-    consequence: (block
-      (pass_statement))))
+  (comptime_statement
+    (if_statement
+      (identifier)
+      (block
+        (pass_statement)))))
 
 ================================================================================
 Comptime if - with else
@@ -3896,15 +3897,16 @@ else:
 --------------------------------------------------------------------------------
 
 (module
-  (if_statement
-    condition: (comparison_operator
-      (identifier)
-      (integer))
-    consequence: (block
-      (pass_statement))
-    alternative: (else_clause
-      body: (block
-        (pass_statement)))))
+  (comptime_statement
+    (if_statement
+      (comparison_operator
+        (identifier)
+        (integer))
+      (block
+        (pass_statement))
+      (else_clause
+        (block
+          (pass_statement))))))
 
 ================================================================================
 Comptime if - with elif
@@ -3920,21 +3922,22 @@ else:
 --------------------------------------------------------------------------------
 
 (module
-  (if_statement
-    condition: (comparison_operator
-      (identifier)
-      (integer))
-    consequence: (block
-      (pass_statement))
-    alternative: (elif_clause
-      condition: (comparison_operator
+  (comptime_statement
+    (if_statement
+      (comparison_operator
         (identifier)
         (integer))
-      consequence: (block
-        (pass_statement)))
-    alternative: (else_clause
-      body: (block
-        (pass_statement)))))
+      (block
+        (pass_statement))
+      (elif_clause
+        (comparison_operator
+          (identifier)
+          (integer))
+        (block
+          (pass_statement)))
+      (else_clause
+        (block
+          (pass_statement))))))
 
 ================================================================================
 Comptime for - simple
@@ -3946,14 +3949,15 @@ comptime for i in range(10):
 --------------------------------------------------------------------------------
 
 (module
-  (for_statement
-    left: (identifier)
-    right: (call
-      function: (identifier)
-      arguments: (argument_list
-        (integer)))
-    body: (block
-      (pass_statement))))
+  (comptime_statement
+    (for_statement
+      (identifier)
+      (call
+        (identifier)
+        (argument_list
+          (integer)))
+      (block
+        (pass_statement)))))
 
 ================================================================================
 Comptime for - with else
@@ -3967,14 +3971,15 @@ else:
 --------------------------------------------------------------------------------
 
 (module
-  (for_statement
-    left: (identifier)
-    right: (identifier)
-    body: (block
-      (pass_statement))
-    alternative: (else_clause
-      body: (block
-        (pass_statement)))))
+  (comptime_statement
+    (for_statement
+      (identifier)
+      (identifier)
+      (block
+        (pass_statement))
+      (else_clause
+        (block
+          (pass_statement))))))
 
 ================================================================================
 Comptime assert - keyword form
@@ -4058,7 +4063,7 @@ struct CacheAligned:
     definition: (class_definition
       name: (identifier)
       body: (block
-        (assignment
+        (variable_declaration
           left: (identifier)
           type: (type
             (identifier)))))))
@@ -4092,7 +4097,7 @@ struct AlignedBuffer[alignment: Int]:
             (type
               (identifier)))))
       body: (block
-        (assignment
+        (variable_declaration
           left: (identifier)
           type: (type
             (identifier)))))))
@@ -4120,7 +4125,7 @@ struct SimdAligned:
     definition: (class_definition
       name: (identifier)
       body: (block
-        (assignment
+        (variable_declaration
           left: (identifier)
           type: (type
             (identifier)))))))
