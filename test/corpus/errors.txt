@@ -52,23 +52,24 @@ def test_incomplete_call():
     (identifier)
     (parameters)
     (ERROR
-      (identifier))
+      (identifier)
+      (call
+        (inferred_attribute
+          (comment)
+          (ERROR)
+          (identifier))
+        (argument_list)))
     (comment)
     (block
-      (function_definition
-        (identifier)
-        (parameters)
-        (comment)
-        (block
-          (pass_statement)))))
-  (function_definition
+      (pass_statement)))
+  (ERROR
+    (call
+      (identifier)
+      (argument_list))
+    (identifier))
+  (comment)
+  (class_definition
     (identifier)
-    (parameters)
-    (ERROR)
     (comment)
     (block
-      (class_definition
-        (identifier)
-        (comment)
-        (block
-          (pass_statement))))))
+      (pass_statement))))

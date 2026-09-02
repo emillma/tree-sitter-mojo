@@ -340,6 +340,10 @@
         "named": true
       },
       {
+        "type": "inferred_attribute",
+        "named": true
+      },
+      {
         "type": "integer",
         "named": true
       },
@@ -2667,6 +2671,58 @@
     "type": "infer_separator",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "inferred_attribute",
+    "named": true,
+    "fields": {
+      "attribute": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "comptime",
+            "named": false
+          },
+          {
+            "type": "deinit",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "mut",
+            "named": false
+          },
+          {
+            "type": "out",
+            "named": false
+          },
+          {
+            "type": "read",
+            "named": false
+          },
+          {
+            "type": "ref",
+            "named": false
+          },
+          {
+            "type": "unified",
+            "named": false
+          },
+          {
+            "type": "var",
+            "named": false
+          },
+          {
+            "type": "where",
+            "named": false
+          }
+        ]
+      }
+    }
   },
   {
     "type": "interpolation",

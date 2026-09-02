@@ -1035,6 +1035,7 @@ module.exports = grammar({
         $.unary_operator,
         $.transfer_expression,
         $.attribute,
+        $.inferred_attribute,
         choice(prec.dynamic(-1, $.subscript), prec.dynamic(1, $.call)),
         $.list,
         $.list_comprehension,
@@ -1281,6 +1282,29 @@ module.exports = grammar({
         seq(
           'yield',
           choice(seq('from', $.expression), optional($._expressions)),
+        ),
+      ),
+
+    // A contextually inferred member reference, e.g. the `.red` in
+    // `takes_color(.red)` or `var x: Color = .red`. The leading dot form
+    // resolves against the expected type of the expression.
+    inferred_attribute: ($) =>
+      prec(
+        PREC.call,
+        seq(
+          '.',
+          field('attribute', choice(
+            $.identifier,
+            'var',
+            'comptime',
+            'ref',
+            'read',
+            'mut',
+            'out',
+            'deinit',
+            'unified',
+            'where',
+          )),
         ),
       ),
 
